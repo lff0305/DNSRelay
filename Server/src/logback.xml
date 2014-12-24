@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- For assistance related to logback-translator or configuration  -->
+<!-- files in general, please contact the logback user mailing list -->
+<!-- at http://www.qos.ch/mailman/listinfo/logback-user             -->
+<!--                                                                -->
+<!-- For professional support please see                            -->
+<!--    http://www.qos.ch/shop/products/professionalSupport         -->
+<!--                                                                -->
+<configuration>
+    <appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
+        <Target>System.out</Target>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} %5p [%t] %c{1}:%L - %m%n</pattern>
+        </encoder>
+    </appender>
+    <appender name="R" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!--See also http://logback.qos.ch/manual/appenders.html#RollingFileAppender-->
+        <File>./logs/serverError.txt</File>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} %5p [%t] %c{1}:%L - %m%n</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>WARN</level>
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+            <maxIndex>10</maxIndex>
+            <FileNamePattern>./logs/serverError.txt.%i</FileNamePattern>
+        </rollingPolicy>
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <maxFileSize>10MB</maxFileSize>
+        </triggeringPolicy>
+    </appender>
+    <appender name="I" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!--See also http://logback.qos.ch/manual/appenders.html#RollingFileAppender-->
+        <File>./logs/serverInfo.txt</File>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} %5p [%t] %c{1}:%L - %m%n</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+            <maxIndex>10</maxIndex>
+            <FileNamePattern>./logs/serverInfo.txt.%i</FileNamePattern>
+        </rollingPolicy>
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <maxFileSize>10MB</maxFileSize>
+        </triggeringPolicy>
+    </appender>
+    <logger name="com.sharpview" level="INFO"/>
+    <logger name="org.jboss.resteasy.jsapi" level="ERROR"/>
+    <!-- <logger name="org.hibernate.SQL" level="DEBUG"/> -->
+    <logger name="org.hibernate" level="ERROR"/>
+    <root level="debug">
+        <appender-ref ref="stdout"/>
+        <appender-ref ref="R"/>
+        <appender-ref ref="I"/>
+    </root>
+</configuration>
