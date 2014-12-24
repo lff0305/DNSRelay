@@ -3,10 +3,11 @@ package org.lff.server.actors;
 import akka.actor.UntypedActor;
 import akka.event.Logging;
 import akka.event.LoggingAdapter;
-import akka.event.slf4j.Logger;
+import org.lff.rsa.RSACipher;
+import org.lff.server.messages.RSAEncryptedRequestMessage;
+import org.lff.server.messages.RSAEncryptedResponseMessage;
 import org.lff.server.messages.RequestMessage;
 import org.lff.server.messages.ResponseMessage;
-import org.slf4j.spi.LoggerFactoryBinder;
 
 import java.io.IOException;
 import java.io.InterruptedIOException;
@@ -22,12 +23,15 @@ public class DNSActor extends UntypedActor {
 
     @Override
     public void onReceive(Object o) throws Exception {
-        if (!(o instanceof RequestMessage)) {
-            return;
+        RequestMessage requestMessage = null;
+        if ((o instanceof RequestMessage)) {
+            requestMessage = (RequestMessage) o;
         }
-
-        RequestMessage requestMessage = (RequestMessage)o;
-
+        if (o instanceof RSAEncryptedRequestMessage) {
+            RSAEncryptedRequestMessage rsaMessage = (RSAEncryptedRequestMessage)o;
+            byte[] data = RSACipher.decrypt(rsaMessage.getData());
+            requestMessage = new RequestMessage(data);
+        }
         byte[] dns = requestMessage.getDnsServer();
         byte[] data = requestMessage.getRequest();
 
@@ -37,8 +41,9 @@ public class DNSActor extends UntypedActor {
             message.setPort(requestMessage.getPort());
             message.setInetaddr(requestMessage.getInetaddr());
             message.setData(r);
+            RSAEncryptedResponseMessage m = new RSAEncryptedResponseMessage(RSACipher.encrypt(message.toByteArray()));
             logger.info("Tell " + message + " to " + getSender());
-            getSender().tell(message, getSelf());
+            getSender().tell(m, getSelf());
         }
     }
 
