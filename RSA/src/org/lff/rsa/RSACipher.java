@@ -1,13 +1,16 @@
 package org.lff.rsa;
 
-import javax.crypto.BadPaddingException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
-import java.security.InvalidKeyException;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.security.NoSuchAlgorithmException;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
+import java.util.Arrays;
 
 /**
  * User: LFF
@@ -15,6 +18,7 @@ import java.security.interfaces.RSAPublicKey;
  */
 public class RSACipher {
 
+    private static final Logger logger = LoggerFactory.getLogger(RSACipher.class);
 
     private static RSAPublicKey pubKey;
     private static RSAPrivateKey privKey;
@@ -32,14 +36,31 @@ public class RSACipher {
         }
     }
 
-    public static byte[] encrypt(byte[] sources) {
+    public static byte[] encrypt(byte[] input) {
         try {
+            ByteArrayInputStream bis = new ByteArrayInputStream(input);
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
             Cipher cipher = Cipher.getInstance("RSA");
             cipher.init(Cipher.ENCRYPT_MODE, pubKey);
-            byte[] cipherText = cipher.doFinal(sources);
-            return cipherText;
+            byte[] buf = new byte[200];
+            int size = bis.read(buf);
+            while (size > 0) {
+                if (size == 200) {
+                    byte[] cipherText = cipher.doFinal(buf);
+                    System.out.println(cipherText.length + ":" + Arrays.toString(cipherText));
+                    bos.write(cipherText);
+                } else {
+                    byte[] t = new byte[size];
+                    System.arraycopy(buf, 0, t, 0, size);
+                    byte[] cipherText = cipher.doFinal(t);
+                    bos.write(cipherText);
+                }
+                size = bis.read(buf);
+            }
+            bos.close();
+            return bos.toByteArray();
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Error in encrypt data " + Arrays.toString(input), e);
         }
         return null;
     }
@@ -48,10 +69,27 @@ public class RSACipher {
         try {
             Cipher cipher = Cipher.getInstance("RSA");
             cipher.init(Cipher.DECRYPT_MODE, privKey);
-            byte[] plainText = cipher.doFinal(encrypted);
-            return plainText;
-        }catch (Exception e) {
 
+            ByteArrayInputStream bis = new ByteArrayInputStream(encrypted);
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            byte[] buf = new byte[256];
+            int size = bis.read(buf);
+            while (size > 0) {
+                if (size == 256) {
+                    byte[] cipherText = cipher.doFinal(buf);
+                    bos.write(cipherText);
+                } else {
+                    byte[] t = new byte[size];
+                    System.arraycopy(buf, 0, t, 0, size);
+                    byte[] cipherText = cipher.doFinal(t);
+                    bos.write(cipherText);
+                }
+                size = bis.read(buf);
+            }
+            bos.close();
+            return bos.toByteArray();
+        }catch (Exception e) {
+            logger.error("Error in decrypt data " + Arrays.toString(encrypted), e);
         }
         return null;
     }
