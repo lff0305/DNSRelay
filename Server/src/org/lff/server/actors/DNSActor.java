@@ -4,7 +4,7 @@ import akka.actor.UntypedActor;
 import akka.event.Logging;
 import akka.event.LoggingAdapter;
 import org.lff.rsa.RSACipher;
-import org.lff.server.messages.*;
+import org.lff.client.messages.*;
 
 import java.io.IOException;
 import java.io.InterruptedIOException;

@@ -1,12 +1,12 @@
-package org.lff.server.listener;
+package org.lff.client.listener;
 
 import akka.actor.ActorContext;
 import akka.actor.ActorRef;
 import akka.actor.Props;
 import org.lff.rsa.RSACipher;
-import org.lff.server.actors.DNSRelayActor;
-import org.lff.server.messages.RSAEncryptedRequestMessage;
-import org.lff.server.messages.RequestMessage;
+import org.lff.client.actors.DNSRelayActor;
+import org.lff.client.messages.RSAEncryptedRequestMessage;
+import org.lff.client.messages.RequestMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

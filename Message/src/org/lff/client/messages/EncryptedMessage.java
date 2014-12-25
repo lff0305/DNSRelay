@@ -1,4 +1,4 @@
-package org.lff.server.messages;
+package org.lff.client.messages;
 
 import java.io.Serializable;
 

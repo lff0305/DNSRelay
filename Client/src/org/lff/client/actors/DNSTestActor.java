@@ -1,4 +1,4 @@
-package org.lff.server.actors;
+package org.lff.client.actors;
 
 import akka.actor.ActorSelection;
 import akka.actor.UntypedActor;
@@ -24,7 +24,7 @@ public class DNSTestActor extends UntypedActor {
         if (o instanceof String) {
             String msg = (String)o;
             if (msg.equalsIgnoreCase("Test")) {
-                logger.info("Test remote server started.");
+                logger.info("Test remote client started.");
                 Timeout timeout = new Timeout(Duration.create(5, "seconds"));
                 ActorSelection selection = getContext().actorSelection("akka.tcp://RelayServer@127.0.0.1:2552/user/dns");
                 Future<Object> future = Patterns.ask(selection, msg, timeout);

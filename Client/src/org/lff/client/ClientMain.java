@@ -1,4 +1,4 @@
-package org.lff.server;
+package org.lff.client;
 
 import akka.actor.ActorRef;
 import akka.actor.ActorSelection;
@@ -8,8 +8,8 @@ import akka.pattern.Patterns;
 import akka.util.Timeout;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
-import org.lff.server.actors.DNSListenerActor;
-import org.lff.server.messages.OKMessage;
+import org.lff.client.actors.DNSListenerActor;
+import org.lff.client.messages.OKMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import scala.concurrent.Await;
@@ -48,7 +48,7 @@ public class ClientMain {
         ActorSystem system = ActorSystem.create("RelayClient", c);
         ActorRef d = system.actorOf(Props.create(DNSListenerActor.class), "dnsClientListener");
 
-        logger.info("Test remote server started.");
+        logger.info("Test remote client started.");
         Timeout timeout = new Timeout(Duration.create(5, "seconds"));
         ActorSelection selection = system.actorSelection("akka.tcp://RelayServer@127.0.0.1:2552/user/dns");
         Future<Object> future = Patterns.ask(selection, new OKMessage(), timeout);
@@ -56,7 +56,7 @@ public class ClientMain {
         try {
             result = (String) Await.result(future, timeout.duration());
         } catch (TimeoutException te) {
-            logger.error("Remote server did not response in 5 seconds. Please check.");
+            logger.error("Remote client did not response in 5 seconds. Please check.");
             system.shutdown();
             return;
         } catch (Exception e) {

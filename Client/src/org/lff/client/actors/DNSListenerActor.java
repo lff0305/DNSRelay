@@ -1,7 +1,7 @@
-package org.lff.server.actors;
+package org.lff.client.actors;
 
 import akka.actor.*;
-import org.lff.server.listener.DNSListenerThread;
+import org.lff.client.listener.DNSListenerThread;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
