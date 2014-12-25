@@ -1,40 +1,35 @@
-package org.lff.client.messages;
+package org.lff.common.messages;
 
 import java.io.*;
 
 /**
  * User: LFF
- * Datetime: 2014/12/24 11:54
+ * Datetime: 2014/12/24 12:11
  */
-public class RequestMessage implements Serializable {
-    private byte[] dnsServer;
-    private byte[] request;
+public class ResponseMessage  implements Serializable {
+    private byte[] data;
 
     private int port;
     private byte[] inetaddr;
 
-    public RequestMessage() {
+    public ResponseMessage() {
 
     }
 
-    public RequestMessage(byte[] data) {
+    public ResponseMessage(byte[] data) {
         ByteArrayInputStream bis = new ByteArrayInputStream(data);
         DataInputStream dis = new DataInputStream(bis);
         try {
             int length = dis.readInt();
-            this.request = new byte[length];
-            dis.readFully(this.request);
+            this.data = new byte[length];
+            dis.readFully(this.data);
+            port = dis.readInt();
             length = dis.readInt();
-            this.dnsServer = new byte[length];
-            dis.readFully(this.dnsServer);
-            this.port = dis.readInt();
-            length = dis.readInt();;
             this.inetaddr = new byte[length];
             dis.readFully(this.inetaddr);
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
     public int getPort() {
@@ -53,30 +48,20 @@ public class RequestMessage implements Serializable {
         this.inetaddr = inetaddr;
     }
 
-    public byte[] getDnsServer() {
-        return dnsServer;
+    public byte[] getData() {
+        return data;
     }
 
-    public void setDnsServer(byte[] dnsServer) {
-        this.dnsServer = dnsServer;
-    }
-
-    public byte[] getRequest() {
-        return request;
-    }
-
-    public void setRequest(byte[] request) {
-        this.request = request;
+    public void setData(byte[] data) {
+        this.data = data;
     }
 
     public byte[] toByteArray() {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         DataOutputStream ds = new DataOutputStream(bos);
         try {
-            ds.writeInt(request.length);
-            ds.write(request);
-            ds.writeInt(dnsServer.length);
-            ds.write(dnsServer);
+            ds.writeInt(data.length);
+            ds.write(data);
             ds.writeInt(port);
             ds.writeInt(inetaddr.length);
             ds.write(inetaddr);

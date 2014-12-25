@@ -3,10 +3,10 @@ package org.lff.client.actors;
 import akka.actor.ActorSelection;
 import akka.actor.UntypedActor;
 import org.lff.rsa.RSACipher;
-import org.lff.client.messages.RSAEncryptedRequestMessage;
-import org.lff.client.messages.RSAEncryptedResponseMessage;
-import org.lff.client.messages.RequestMessage;
-import org.lff.client.messages.ResponseMessage;
+import org.lff.common.messages.RSAEncryptedRequestMessage;
+import org.lff.common.messages.RSAEncryptedResponseMessage;
+import org.lff.common.messages.RequestMessage;
+import org.lff.common.messages.ResponseMessage;
 
 import java.io.IOException;
 import java.net.DatagramPacket;

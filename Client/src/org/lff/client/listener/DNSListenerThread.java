@@ -5,8 +5,8 @@ import akka.actor.ActorRef;
 import akka.actor.Props;
 import org.lff.rsa.RSACipher;
 import org.lff.client.actors.DNSRelayActor;
-import org.lff.client.messages.RSAEncryptedRequestMessage;
-import org.lff.client.messages.RequestMessage;
+import org.lff.common.messages.RSAEncryptedRequestMessage;
+import org.lff.common.messages.RequestMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -9,7 +9,7 @@ import akka.util.Timeout;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 import org.lff.client.actors.DNSListenerActor;
-import org.lff.client.messages.OKMessage;
+import org.lff.common.messages.OKMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import scala.concurrent.Await;

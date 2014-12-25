@@ -1,4 +1,4 @@
-package org.lff.client.messages;
+package org.lff.common.messages;
 
 /**
  * User: LFF
