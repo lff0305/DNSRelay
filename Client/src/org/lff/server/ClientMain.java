@@ -1,13 +1,22 @@
 package org.lff.server;
 
 import akka.actor.ActorRef;
+import akka.actor.ActorSelection;
 import akka.actor.ActorSystem;
 import akka.actor.Props;
+import akka.pattern.Patterns;
+import akka.util.Timeout;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 import org.lff.server.actors.DNSListenerActor;
+import org.lff.server.messages.OKMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import scala.concurrent.Await;
+import scala.concurrent.Future;
+import scala.concurrent.duration.Duration;
+
+import java.util.concurrent.TimeoutException;
 
 
 /**
@@ -38,6 +47,24 @@ public class ClientMain {
         Config c = ConfigFactory.parseString(config);
         ActorSystem system = ActorSystem.create("RelayClient", c);
         ActorRef d = system.actorOf(Props.create(DNSListenerActor.class), "dnsClientListener");
+
+        logger.info("Test remote server started.");
+        Timeout timeout = new Timeout(Duration.create(5, "seconds"));
+        ActorSelection selection = system.actorSelection("akka.tcp://RelayServer@127.0.0.1:2552/user/dns");
+        Future<Object> future = Patterns.ask(selection, new OKMessage(), timeout);
+        String result = null;
+        try {
+            result = (String) Await.result(future, timeout.duration());
+        } catch (TimeoutException te) {
+            logger.error("Remote server did not response in 5 seconds. Please check.");
+            system.shutdown();
+            return;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        logger.info("Test result is {}", result);
+
+
         d.tell("START", null);
     }
 }

@@ -47,7 +47,6 @@ public class RSACipher {
             while (size > 0) {
                 if (size == 200) {
                     byte[] cipherText = cipher.doFinal(buf);
-                    System.out.println(cipherText.length + ":" + Arrays.toString(cipherText));
                     bos.write(cipherText);
                 } else {
                     byte[] t = new byte[size];
