@@ -9,7 +9,9 @@ Requirement:
 2. A VPS server that can access a DNS service.
 
 Many domains, are blocked in China. For example, facebook.com and twitter.com.
+
 -) If you use a DNS server in China, querying ip addresses for such domains will result a wrong ip address.
+
 -) If you use a DNS server outside China(Google Public DNS, OpenDNS, etc), the GFW (Great Fire Wall) will hijacking the DNS Request Packages and reply to you with a fake DNS response.
 
 As a result, you cannot get the correct ip addresses for the domain.
