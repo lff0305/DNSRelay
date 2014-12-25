@@ -4,10 +4,7 @@ import akka.actor.UntypedActor;
 import akka.event.Logging;
 import akka.event.LoggingAdapter;
 import org.lff.rsa.RSACipher;
-import org.lff.server.messages.RSAEncryptedRequestMessage;
-import org.lff.server.messages.RSAEncryptedResponseMessage;
-import org.lff.server.messages.RequestMessage;
-import org.lff.server.messages.ResponseMessage;
+import org.lff.server.messages.*;
 
 import java.io.IOException;
 import java.io.InterruptedIOException;
@@ -23,15 +20,28 @@ public class DNSActor extends UntypedActor {
 
     @Override
     public void onReceive(Object o) throws Exception {
+
+        if (o instanceof OKMessage) {
+            getSender().tell("OK", getSelf());
+            return;
+        }
         RequestMessage requestMessage = null;
         if ((o instanceof RequestMessage)) {
             requestMessage = (RequestMessage) o;
+            processRequest(requestMessage);
+            return;
         }
         if (o instanceof RSAEncryptedRequestMessage) {
             RSAEncryptedRequestMessage rsaMessage = (RSAEncryptedRequestMessage)o;
             byte[] data = RSACipher.decrypt(rsaMessage.getData());
             requestMessage = new RequestMessage(data);
+            processRequest(requestMessage);
+            return;
         }
+        unhandled(o);
+    }
+
+    private void processRequest(RequestMessage requestMessage) throws IOException {
         byte[] dns = requestMessage.getDnsServer();
         byte[] data = requestMessage.getRequest();
 
