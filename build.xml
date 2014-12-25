@@ -1,0 +1,51 @@
+<project name="DNS Relay" default="Debug" basedir=".">
+
+    <!-- Get the build time -->
+    <tstamp>
+        <format property="build.timestamp" pattern="MMM dd, yyyy hh:mm:ss a"/>
+    </tstamp>
+
+    <property name="build.home" value="."></property>
+    <property name="build.dist" value="dist"></property>
+    <property name="build.classes" value="classes"></property>
+
+    <path id="slf4j.classpath">
+        <fileset dir="${build.home}/lib/">
+            <include name="slf4j-api-1.7.7.jar" />
+        </fileset>
+    </path>
+
+
+    <target name="clean">
+        <delete dir="${build.classes}"/>
+        <delete dir="${build.dist}"/>
+        <mkdir dir="${build.classes}"/>
+        <mkdir dir="${build.dist}"/>
+    </target>
+
+    <target name="Message" depends="clean">
+
+        <javac srcdir="Message/src"
+               encoding="UTF-8"
+               destdir="${build.classes}/"
+               debug="on">
+        </javac>
+    </target>
+
+    <target name="RSA" depends="clean,Message">
+
+        <javac srcdir="RSA/src"
+               encoding="UTF-8"
+               destdir="${build.classes}/"
+               debug="on">
+            <classpath refid="slf4j.classpath"/>
+        </javac>
+    </target>
+
+    <target name="Debug" depends="clean,Message,RSA">
+
+
+
+    </target>
+
+</project>
