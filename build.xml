@@ -18,7 +18,12 @@
         <fileset dir="${build.home}/lib/">
             <include name="akka*.jar" />
             <include name="config*.jar" />
-            <include name="scala-library-*.jar" />
+            <include name="scala*.jar" />
+        </fileset>
+    </path>
+    <path id="netty.classpath">
+        <fileset dir="${build.home}/lib/">
+            <include name="netty*.jar" />
         </fileset>
     </path>
 
@@ -57,6 +62,7 @@
                debug="on">
             <classpath refid="slf4j.classpath"/>
             <classpath refid="akka.classpath"/>
+            <classpath refid="netty.classpath"/>
         </javac>
     </target>
 

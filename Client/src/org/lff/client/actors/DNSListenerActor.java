@@ -22,7 +22,7 @@ public class DNSListenerActor extends UntypedActor {
     @Override
     public void onReceive(Object o) throws Exception {
         if (o instanceof String) {
-            DNSListenerThread t = new DNSListenerThread(this.context());
+            DNSListenerThread t = new DNSListenerThread(new AkkaDNSClientCallback(this.context()));
             new Thread(t).start();
             return;
         }

@@ -3,6 +3,7 @@ package org.lff.client.listener;
 import akka.actor.ActorContext;
 import akka.actor.ActorRef;
 import akka.actor.Props;
+import org.lff.client.callback.DNSCallback;
 import org.lff.rsa.RSACipher;
 import org.lff.client.actors.DNSRelayActor;
 import org.lff.common.messages.RSAEncryptedRequestMessage;
@@ -23,10 +24,10 @@ public class DNSListenerThread implements Runnable {
 
     private static final Logger logger = LoggerFactory.getLogger(DNSListenerThread.class);
 
-    private ActorContext context;
+    private DNSCallback callback;
 
-    public DNSListenerThread(ActorContext context) {
-        this.context = context;
+    public DNSListenerThread(DNSCallback callback) {
+        this.callback = callback;
     }
 
     public void run() {
@@ -47,7 +48,7 @@ public class DNSListenerThread implements Runnable {
                 byte[] d = new byte[length];
                 System.arraycopy(data, 0, d, 0, length);
 
-                ActorRef relayActor = context.actorOf(Props.create(DNSRelayActor.class, socket));
+
 
                 RequestMessage message = new RequestMessage();
                 byte[] bs = new byte[]{(byte) 10, (byte) 16, (byte) 33, (byte) 1};
@@ -55,8 +56,11 @@ public class DNSListenerThread implements Runnable {
                 message.setRequest(d);
                 message.setInetaddr(packet.getAddress().getAddress());
                 message.setPort(packet.getPort());
-                RSAEncryptedRequestMessage m = new RSAEncryptedRequestMessage(RSACipher.encrypt(message.toByteArray()));
-                relayActor.tell(m, null);
+                try {
+                    this.callback.callback(message, socket);
+                } catch (Exception e) {
+                    logger.error("Error in callback", e);
+                }
             }
 
         } catch (SocketException e) {
