@@ -15,6 +15,8 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * User: LFF
@@ -26,12 +28,14 @@ public class DNSListenerThread implements Runnable {
 
     private DNSCallback callback;
 
+    private ExecutorService service = Executors.newCachedThreadPool();
+
     public DNSListenerThread(DNSCallback callback) {
         this.callback = callback;
     }
 
     public void run() {
-        DatagramSocket socket = null;
+        final DatagramSocket socket;
         try {
             socket = new DatagramSocket(53);
 
@@ -43,24 +47,27 @@ public class DNSListenerThread implements Runnable {
 
             while (true) {
                 socket.receive(packet);
-                byte[] data = packet.getData();
-                int length = packet.getLength();
-                byte[] d = new byte[length];
-                System.arraycopy(data, 0, d, 0, length);
-
-
-
-                RequestMessage message = new RequestMessage();
-                byte[] bs = new byte[]{(byte) 8, (byte) 8, (byte) 8, (byte) 8};
-                message.setDnsServer(bs);
-                message.setRequest(d);
-                message.setInetaddr(packet.getAddress().getAddress());
-                message.setPort(packet.getPort());
-                try {
-                    this.callback.callback(message, socket);
-                } catch (Exception e) {
-                    logger.error("Error in callback", e);
-                }
+                final byte[] data = packet.getData();
+                final int length = packet.getLength();
+                final int port = packet.getPort();
+                final byte[] addr = packet.getAddress().getAddress();
+                service.submit(new Runnable() {
+                    public void run() {
+                        byte[] d = new byte[length];
+                        System.arraycopy(data, 0, d, 0, length);
+                        RequestMessage message = new RequestMessage();
+                        byte[] bs = new byte[]{(byte) 8, (byte) 8, (byte) 8, (byte) 8};
+                        message.setDnsServer(bs);
+                        message.setRequest(d);
+                        message.setInetaddr(addr);
+                        message.setPort(port);
+                        try {
+                            callback.callback(message, socket);
+                        } catch (Exception e) {
+                            logger.error("Error in callback", e);
+                        }
+                    }
+                });
             }
 
         } catch (SocketException e) {
