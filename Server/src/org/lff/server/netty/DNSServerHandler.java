@@ -59,30 +59,33 @@ public class DNSServerHandler extends SimpleChannelUpstreamHandler {
 
         byte[] result = Resolver.doWork(dnsRequest, dnsServer);
 
-        logger.debug("Real DNS Response is {} {}", result.length, Arrays.toString(result));
+        if (result != null) {
 
-        ResponseMessage m = new ResponseMessage();
-        m.setData(result);
-        m.setPort(requestMessage.getPort());
-        m.setInetaddr(requestMessage.getInetaddr());
+            logger.debug("Real DNS Response is {} {}", result.length, Arrays.toString(result));
 
-        logger.debug("Response Message Hash = " + Arrays.hashCode(m.toByteArray()));
+            ResponseMessage m = new ResponseMessage();
+            m.setData(result);
+            m.setPort(requestMessage.getPort());
+            m.setInetaddr(requestMessage.getInetaddr());
 
-        byte[] r = RSACipher.encrypt(m.toByteArray());
-        logger.debug("Encrypted Response is {} {}", r.length, Arrays.toString(r));
-        HttpResponse response = new DefaultHttpResponse(HTTP_1_1, OK);
+            logger.debug("Response Message Hash = " + Arrays.hashCode(m.toByteArray()));
 
-        ChannelBuffer buffer = new DynamicChannelBuffer(2048);
-        buffer.writeBytes(r);
-        response.setContent(buffer);
-        response.headers().add("Content-Type", "text/html; charset=UTF-8");
-        response.headers().add("Content-Length", response.getContent().writerIndex());
-        response.headers().add("Serial", serial);
-        Channel ch = e.getChannel();
-        // Write the initial line and the header.
-        ch.write(response);
-        ch.disconnect();
-        ch.close();
+            byte[] r = RSACipher.encrypt(m.toByteArray());
+            logger.debug("Encrypted Response is {} {}", r.length, Arrays.toString(r));
+            HttpResponse response = new DefaultHttpResponse(HTTP_1_1, OK);
+
+            ChannelBuffer buffer = new DynamicChannelBuffer(2048);
+            buffer.writeBytes(r);
+            response.setContent(buffer);
+            response.headers().add("Content-Type", "text/html; charset=UTF-8");
+            response.headers().add("Content-Length", response.getContent().writerIndex());
+            response.headers().add("Serial", serial);
+            Channel ch = e.getChannel();
+            // Write the initial line and the header.
+            ch.write(response);
+            ch.disconnect();
+            ch.close();
+        }
     }
 
     @Override

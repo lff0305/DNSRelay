@@ -1,4 +1,4 @@
-<project name="DNS Relay" default="Debug" basedir=".">
+<project name="DNS Relay" default="Dist" basedir=".">
 
     <!-- Get the build time -->
     <tstamp>
@@ -74,12 +74,30 @@
                debug="on">
             <classpath refid="slf4j.classpath"/>
             <classpath refid="akka.classpath"/>
+            <classpath refid="netty.classpath"/>
         </javac>
     </target>
 
+    <target name="Dist" depends="Debug">
+        <jar destfile="${build.dist}/dnsRelay.jar"
+             basedir="${build.classes}"
+             includes="org/**">
+        </jar>
+
+        <copy todir="${build.dist}">
+            <fileset dir="${build.home}/lib/">
+                <include name="*.jar" />
+            </fileset>
+        </copy>
+        <copy todir="${build.dist}">
+            <fileset dir=".">
+                <include name="*.key" />
+                <include name="Server/src/logback.xml" />
+            </fileset>
+        </copy>
+    </target>
 
     <target name="Debug" depends="clean,Message,RSA,Client,Server">
-
 
 
     </target>

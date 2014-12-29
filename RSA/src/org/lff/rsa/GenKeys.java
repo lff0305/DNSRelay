@@ -23,10 +23,12 @@ public class GenKeys {
         FileOutputStream fos = new FileOutputStream(publicKeyFilename);
         fos.write(publicKeyBytes);
         fos.close();
+        System.out.println("Public.key Created.");
         String privateKeyFilename = "private.key";
         byte[] privateKeyBytes = keyPair.getPrivate().getEncoded();
         fos = new FileOutputStream(privateKeyFilename);
         fos.write(privateKeyBytes);
         fos.close();
+        System.out.println("Private.key Created.");
     }
 }

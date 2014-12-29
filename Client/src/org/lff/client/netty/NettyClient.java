@@ -10,7 +10,7 @@ import java.net.URISyntaxException;
  */
 public class NettyClient {
     public static void main(String[] argu) {
-        String host = "127.0.0.1";
+        String host = "172.245.61.102";
         int port = 8080;
         DNSListenerThread t = null;
         try {
