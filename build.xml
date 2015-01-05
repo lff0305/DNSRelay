@@ -14,18 +14,6 @@
             <include name="slf4j-api-1.7.7.jar" />
         </fileset>
     </path>
-    <path id="akka.classpath">
-        <fileset dir="${build.home}/lib/">
-            <include name="akka*.jar" />
-            <include name="config*.jar" />
-            <include name="scala*.jar" />
-        </fileset>
-    </path>
-    <path id="netty.classpath">
-        <fileset dir="${build.home}/lib/">
-            <include name="netty*.jar" />
-        </fileset>
-    </path>
 
     <target name="clean">
         <delete dir="${build.classes}"/>
@@ -61,8 +49,6 @@
                destdir="${build.classes}/"
                debug="on">
             <classpath refid="slf4j.classpath"/>
-            <classpath refid="akka.classpath"/>
-            <classpath refid="netty.classpath"/>
         </javac>
     </target>
 
@@ -73,8 +59,6 @@
                destdir="${build.classes}/"
                debug="on">
             <classpath refid="slf4j.classpath"/>
-            <classpath refid="akka.classpath"/>
-            <classpath refid="netty.classpath"/>
         </javac>
     </target>
 
