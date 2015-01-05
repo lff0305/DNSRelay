@@ -1,7 +1,5 @@
 package org.lff.server.plain;
 
-import org.lff.server.netty.NettyServer;
-import org.lff.server.plain.PlainServer;
 
 /**
  * User: LFF
