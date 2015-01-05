@@ -1,4 +1,4 @@
-package org.lff.client;
+package org.lff.client.actors;
 
 import akka.actor.ActorRef;
 import akka.actor.ActorSelection;
@@ -8,7 +8,6 @@ import akka.pattern.Patterns;
 import akka.util.Timeout;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
-import org.lff.client.actors.DNSListenerActor;
 import org.lff.common.messages.OKMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,9 +22,9 @@ import java.util.concurrent.TimeoutException;
  * User: LFF
  * Datetime: 2014/12/24 11:15
  */
-public class ClientMain {
+public class AkkaClientMain {
 
-    private static final Logger logger = LoggerFactory.getLogger(ClientMain.class);
+    private static final Logger logger = LoggerFactory.getLogger(AkkaClientMain.class);
 
     public static void main(String[] argu) {
 

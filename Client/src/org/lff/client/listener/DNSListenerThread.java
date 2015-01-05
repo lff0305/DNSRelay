@@ -56,7 +56,7 @@ public class DNSListenerThread implements Runnable {
                         byte[] d = new byte[length];
                         System.arraycopy(data, 0, d, 0, length);
                         RequestMessage message = new RequestMessage();
-                        byte[] bs = new byte[]{(byte) 8, (byte) 8, (byte) 8, (byte) 8};
+                        byte[] bs = new byte[]{(byte) 10, (byte) 16, (byte) 33, (byte) 1};
                         message.setDnsServer(bs);
                         message.setRequest(d);
                         message.setInetaddr(addr);
