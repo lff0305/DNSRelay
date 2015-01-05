@@ -1,6 +1,8 @@
 DNSRelay
 ========
 
+DEVELOPING ...... NOT FINISHED .....
+
 A Java based DNS Relayer to go through the GFW.
 
 Requirement:
