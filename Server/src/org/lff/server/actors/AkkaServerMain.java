@@ -1,11 +1,10 @@
-package org.lff.server;
+package org.lff.server.actors;
 
 import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
 import akka.actor.Props;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
-import org.lff.server.actors.DNSActor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,9 +13,9 @@ import org.slf4j.LoggerFactory;
  * User: LFF
  * Datetime: 2014/12/24 10:38
  */
-public class ServerMain {
+public class AkkaServerMain {
 
-    private static final Logger logger = LoggerFactory.getLogger(ServerMain.class);
+    private static final Logger logger = LoggerFactory.getLogger(AkkaServerMain.class);
 
     public static void main(String[] argu) {
         String config = "akka\n{ actor {\n" +

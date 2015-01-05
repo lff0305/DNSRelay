@@ -50,8 +50,11 @@ public class Resolver {
         if (receivedResponse) {
             result = new byte[receivePacket.getLength()];
             System.arraycopy(buffer, 0, result, 0, result.length);
+            return result;
+        }  else {
+            return null;
         }
 
-        return result;
+
     }
 }
