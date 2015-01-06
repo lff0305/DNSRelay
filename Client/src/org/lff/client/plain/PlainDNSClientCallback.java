@@ -24,28 +24,10 @@ public class PlainDNSClientCallback implements DNSCallback {
 
     private String host;
     private int port;
-    private String dns;
-    private byte[] dnsBytes = new byte[4];
 
     public PlainDNSClientCallback(Settings settings) {
         this.host = settings.getHost();
         this.port = settings.getPort();
-        this.dns = settings.getDns();
-
-        String[] dn = dns.split("\\.");
-        if (dn.length != 4) {
-            logger.error("Invalid dns server {}", dns);
-            throw new RuntimeException("Invalid dns server " + dns);
-        }
-        try {
-            dnsBytes[0] = Byte.valueOf(dn[0]).byteValue();
-            dnsBytes[1] = Byte.valueOf(dn[1]).byteValue();
-            dnsBytes[2] = Byte.valueOf(dn[2]).byteValue();
-            dnsBytes[3] = Byte.valueOf(dn[3]).byteValue();
-        } catch (Exception e) {
-            logger.error("Invalid dns server {}", dns);
-            throw new RuntimeException("Invalid dns server " + dns);
-        }
     }
 
     public void callback(RequestMessage message, DatagramSocket socket) {
@@ -80,10 +62,6 @@ public class PlainDNSClientCallback implements DNSCallback {
         } finally {
         }
 
-    }
-
-    public byte[] getDNSServer() {
-        return this.dnsBytes;
     }
 
     /**

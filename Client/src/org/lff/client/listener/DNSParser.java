@@ -16,7 +16,7 @@ public class DNSParser {
 
     private static final Logger logger = LoggerFactory.getLogger(DNSParser.class);
 
-    List<String> getQueryDomains(byte[] packet) throws IOException {
+    static List<String> getQueryDomains(byte[] packet) throws IOException {
         DataInputStream dis = new DataInputStream(new ByteArrayInputStream(packet));
         short id = dis.readShort();
         byte flag1 = dis.readByte();

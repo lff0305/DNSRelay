@@ -3,6 +3,7 @@ package org.lff.client.listener;
 
 import org.lff.client.callback.DNSCallback;
 
+import org.lff.client.plain.SettingFactory;
 import org.lff.common.messages.RequestMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +12,7 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -51,9 +53,24 @@ public class DNSListenerThread implements Runnable {
                     public void run() {
                         byte[] d = new byte[length];
                         System.arraycopy(data, 0, d, 0, length);
+                        byte[] realDNS = null;
+                        try {
+                            List<String> domains = DNSParser.getQueryDomains(d);
+                            if (domains == null || domains.isEmpty()) {
+                                return;
+                            }
+                            realDNS = SettingFactory.getSettings().getRealDNS(domains);
+                            if (realDNS == null) {
+                                logger.info("Cannot find realdns for " + domains);
+                                return;
+                            }
+                            logger.debug("Get {} for {}", realDNS, domains);
+                        } catch (IOException e) {
+                            return;
+                        }
+
                         RequestMessage message = new RequestMessage();
-                        byte[] bs = callback.getDNSServer();
-                        message.setDnsServer(bs);
+                        message.setDnsServer(realDNS);
                         message.setRequest(d);
                         message.setInetaddr(addr);
                         message.setPort(port);
