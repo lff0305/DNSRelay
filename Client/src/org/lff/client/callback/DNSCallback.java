@@ -10,4 +10,6 @@ import java.net.DatagramSocket;
  */
 public interface DNSCallback {
     public void callback(RequestMessage message, DatagramSocket socket);
+
+    public byte[] getDNSServer();
 }
