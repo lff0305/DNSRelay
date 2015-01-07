@@ -1,13 +1,10 @@
 package org.lff.client.plain;
 
-import com.typesafe.config.Config;
-import com.typesafe.config.ConfigFactory;
 import org.lff.client.listener.DNSListenerThread;
+import org.lff.rsa.RSACipher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Arrays;
-import java.util.List;
 
 
 /**
@@ -22,6 +19,13 @@ public class PlainClientMain {
 
         Settings settings;
         PlainDNSClientCallback callback;
+        try {
+            RSACipher.load();
+            logger.info("Public/Private keys loaded successfully.");
+        } catch (Exception e) {
+            logger.error("Failed to load keys", e);
+            return;
+        }
         try {
             settings = SettingFactory.getSettings();
             logger.info("Read config as \n {}", settings.toString());
